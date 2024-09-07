@@ -1,0 +1,58 @@
+#include <WiFi.h>
+#include <BluetoothSerial.h>
+
+// Voice recognition module pins
+const int voiceRX = 16;
+const int voiceTX = 17;
+
+// Initialize Bluetooth and voice recognition module
+BluetoothSerial SerialBT;
+HardwareSerial voiceSerial(1);
+
+void setup() {
+  // Start serial communication
+  Serial.begin(115200);
+  voiceSerial.begin(9600, SERIAL_8N1, voiceRX, voiceTX);
+
+  // Initialize Bluetooth
+  SerialBT.begin("ESP32_Infotainment");
+
+  // Initialize voice recognition module
+  Serial.println("Voice Recognition Module Initialization...");
+  delay(1000);
+  // Add initialization commands specific to the voice recognition module
+}
+
+void loop() {
+  // Check for voice commands
+  if (voiceSerial.available()) {
+    int command = voiceSerial.read();
+
+    switch (command) {
+      case 1:
+        Serial.println("Play Music");
+        // Code to play music
+        break;
+      case 2:
+        Serial.println("Call");
+        // Code to initiate a call
+        break;
+      case 3:
+        Serial.println("Navigation");
+        // Code to start navigation
+        break;
+      default:
+        Serial.println("Unknown Command");
+        break;
+    }
+  }
+
+  // Handle Bluetooth communication if necessary
+  if (SerialBT.available()) {
+    String command = SerialBT.readString();
+    Serial.println("Bluetooth Command: " + command);
+    // Handle Bluetooth commands
+  }
+
+  delay(100);
+}
